@@ -1,5 +1,43 @@
 # Kubeflow Spark
 
+
+## Getting started
+1. Start your local cluster
+```
+sh ./minikube-start.sh
+```
+
+2. Install Kubeflow Pipelines
+```
+sh ./install-kubeflow.sh
+```
+
+3. Install Spark Operator
+```
+sh ./install-spark-operator.sh
+```
+
+4. Create Spark Service Account
+```
+sh ./add-spark-sa.sh
+```
+
+5. Make Kubeflow UI reachable
+5a. (Optional) Add Kubeflow UI Ingress
+```
+sh ./add-kubeflow-ingress.sh
+```
+5b. (Optional) Forward service port, e.g:
+```
+kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8005:80
+```
+
+6. Create Kubeflow pipeline definition file
+```
+python kubeflow_pipeline.py
+```
+
+Now navigate
 ## To Do
 1. Create Ingress for Kubeflow Pipelines UI
 2. Install spark-operator

@@ -1,7 +1,9 @@
-import kfp.dsl as dsl
 import json
-import kfp.components as comp
 import time
+import yaml
+
+import kfp.components as comp
+import kfp.dsl as dsl
 
 SPARK_RUNNING_STATE = "RUNNING"
 SPARK_COMPLETED_STATE = "COMPLETED"
@@ -9,12 +11,30 @@ SPARK_APPLICATION_KIND = "sparkapplications"
 NAMESPACE = "kubeflow"
 
 
+def get_spark_job_definition():
+    """
+    Read Spark Operator job manifest file and return the corresponding dictionary and
+    add some randomness in the job name
+    :return: dictionary defining the spark job
+    """
+    # Read manifest file
+    with open("spark-job.yaml", "r") as stream:
+        spark_job_definition = yaml.safe_load(stream)
+    # Add epoch time in the job name
+    epoch = int(time.time())
+    spark_job_definition["metadata"]["name"] = spark_job_definition["metadata"]["name"].format(epoch=epoch)
+
+    return spark_job_definition
+
+
 def print_op(msg):
-    """Print a message."""
+    """
+    Op to print a message.
+    """
     return dsl.ContainerOp(
-        name='Print',
-        image='alpine:3.6',
-        command=['echo', msg],
+        name="Print",
+        image="alpine:3.6",
+        command=["echo", msg],
     )
 
 
@@ -31,34 +51,33 @@ def graph_component_spark_app_status(input_from_op):
     with dsl.Condition(check_spark_application_status_op.outputs["applicationstate"] == SPARK_RUNNING_STATE):
         graph_component_spark_app_status(check_spark_application_status_op.outputs["name"])
 
+    return check_spark_application_status_op
+
 
 @dsl.pipeline(
-    name='Submit Spark job pipeline',
-    description='Submit Spark job pipeline'
+    name="Spark Operator job pipeline",
+    description="Spark Operator job pipeline"
 )
-def submit_spark_job_pipeline():
-    k8s_apply_op = comp.load_component_from_file("component.yaml")
+def spark_job_pipeline():
+    spark_job_definition = get_spark_job_definition()
 
-    with open("spark-job.json", "rb") as f:
-        json_object = json.load(f)
-
-    spark_job_op = k8s_apply_op(object=json.dumps(json_object))
+    k8s_apply_op = comp.load_component_from_file("spark_apply_component.yaml")
+    spark_job_op = k8s_apply_op(object=json.dumps(spark_job_definition))
     name = spark_job_op.outputs["name"]
     kind = spark_job_op.outputs["kind"]
     object_spark_apply = spark_job_op.outputs["object"]
-    namespace = "kubeflow"
 
     spark_job_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
-    print_op(spark_job_op.outputs["object"]).after(spark_job_op)
 
-    graph_spark_app_status_op = graph_component_spark_app_status(spark_job_op.outputs["name"])
-    graph_spark_app_status_op.after(spark_job_op)
-    # graph_spark_app_status_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
+    spark_application_status_op = graph_component_spark_app_status(spark_job_op.outputs["name"])
+    spark_application_status_op.after(spark_job_op)
+
+    print_op(name).after(spark_application_status_op)
 
 
 if __name__ == "__main__":
-    #Compile the pipeline
+    # Compile the pipeline
     import kfp.compiler as compiler
-    pipeline_func = submit_spark_job_pipeline
-    pipeline_filename = pipeline_func.__name__ + '.yaml'
+    pipeline_func = spark_job_pipeline
+    pipeline_filename = pipeline_func.__name__ + ".yaml"
     compiler.Compiler().compile(pipeline_func, pipeline_filename)
