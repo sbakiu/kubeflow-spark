@@ -2,7 +2,6 @@ name: Get Kubernetes object
 inputs:
   - {name: Name, type: String}
   - {name: Kind, type: String}
-  - {name: Namespace, type: String}
 outputs:
   - {name: Name, type: String}
   - {name: ApplicationState, type: String}
@@ -19,22 +18,20 @@ implementation:
       - |
         object_name=$0
         object_type=$1
-        object_namespace=$2
-        output_name_path=$3
-        output_state_path=$4
-        output_object_path=$5
+        output_name_path=$2
+        output_state_path=$3
+        output_object_path=$4
         mkdir -p "$(dirname "$output_name_path")"
         mkdir -p "$(dirname "$output_state_path")"
         mkdir -p "$(dirname "$output_object_path")"
 
-        kubectl get "$object_type" "$object_name" -n "$object_namespace" --output=json > "$output_object_path"
+        kubectl get "$object_type" "$object_name" --output=json > "$output_object_path"
 
         < "$output_object_path" jq '.metadata.name' --raw-output > "$output_name_path"
         < "$output_object_path" jq '.status.applicationState.state' --raw-output > "$output_state_path"
 
       - {inputValue: Name}
       - {inputValue: Kind}
-      - {inputValue: Namespace}
       - {outputPath: Name}
       - {outputPath: ApplicationState}
       - {outputPath: Object}

@@ -8,7 +8,6 @@ import kfp.dsl as dsl
 SPARK_RUNNING_STATE = "RUNNING"
 SPARK_COMPLETED_STATE = "COMPLETED"
 SPARK_APPLICATION_KIND = "sparkapplications"
-NAMESPACE = "kubeflow"
 
 
 def get_spark_job_definition():
@@ -40,11 +39,10 @@ def print_op(msg):
 
 @dsl.graph_component
 def graph_component_spark_app_status(input_from_op):
-    k8s_get_op = comp.load_component_from_file("spark_get_component.yaml")
+    k8s_get_op = comp.load_component_from_file("spark-get-component.yaml")
     check_spark_application_status_op = k8s_get_op(
         name=input_from_op,
-        kind=SPARK_APPLICATION_KIND,
-        namespace=NAMESPACE
+        kind=SPARK_APPLICATION_KIND
     )
     check_spark_application_status_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
     time.sleep(5)
@@ -61,11 +59,11 @@ def graph_component_spark_app_status(input_from_op):
 def spark_job_pipeline():
     spark_job_definition = get_spark_job_definition()
 
-    k8s_apply_op = comp.load_component_from_file("spark_apply_component.yaml")
+    k8s_apply_op = comp.load_component_from_file("spark-apply-component.yaml")
     spark_job_op = k8s_apply_op(object=json.dumps(spark_job_definition))
     name = spark_job_op.outputs["name"]
-    kind = spark_job_op.outputs["kind"]
-    object_spark_apply = spark_job_op.outputs["object"]
+    # kind = spark_job_op.outputs["kind"]
+    # object_spark_apply = spark_job_op.outputs["object"]
 
     spark_job_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
