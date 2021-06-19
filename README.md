@@ -4,28 +4,28 @@
 ## Getting started
 1. Start your local cluster
 ```
-sh ./minikube-start.sh
+sh ./scripts/minikube-start.sh
 ```
 
 2. Install Kubeflow Pipelines
 ```
-sh ./install-kubeflow.sh
+sh ./scripts/install-kubeflow.sh
 ```
 
 3. Install Spark Operator
 ```
-sh ./install-spark-operator.sh
+sh ./scripts/install-spark-operator.sh
 ```
 
 4. Create Spark Service Account
 ```
-sh ./add-spark-sa.sh
+sh ./scripts/add-spark-sa.sh
 ```
 
 5. Make Kubeflow UI reachable
 5a. (Optional) Add Kubeflow UI Ingress
 ```
-sh ./add-kubeflow-ingress.sh
+sh ./scripts/add-kubeflow-ingress.sh
 ```
 5b. (Optional) Forward service port, e.g:
 ```
