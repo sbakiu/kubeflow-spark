@@ -1,2 +1,2 @@
 #!/bin/bash
-kubectl apply -f spark-rbac.yaml
+kubectl apply -f ./scripts/spark-rbac.yaml
