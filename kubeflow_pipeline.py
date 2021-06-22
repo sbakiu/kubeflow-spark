@@ -18,12 +18,13 @@ def get_spark_job_definition():
     """
     # Read manifest file
     with open("spark-job.yaml", "r") as stream:
-        spark_job_definition = yaml.safe_load(stream)
+        spark_job_manifest = yaml.safe_load(stream)
+
     # Add epoch time in the job name
     epoch = int(time.time())
-    spark_job_definition["metadata"]["name"] = spark_job_definition["metadata"]["name"].format(epoch=epoch)
+    spark_job_manifest["metadata"]["name"] = spark_job_manifest["metadata"]["name"].format(epoch=epoch)
 
-    return spark_job_definition
+    return spark_job_manifest
 
 
 def print_op(msg):
@@ -44,7 +45,9 @@ def graph_component_spark_app_status(input_from_op):
         name=input_from_op,
         kind=SPARK_APPLICATION_KIND
     )
+    # Remove cache
     check_spark_application_status_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
+
     time.sleep(5)
     with dsl.Condition(check_spark_application_status_op.outputs["applicationstate"] == SPARK_RUNNING_STATE):
         graph_component_spark_app_status(check_spark_application_status_op.outputs["name"])
@@ -62,8 +65,6 @@ def spark_job_pipeline():
     k8s_apply_op = comp.load_component_from_file("spark-apply-component.yaml")
     spark_job_op = k8s_apply_op(object=json.dumps(spark_job_definition))
     name = spark_job_op.outputs["name"]
-    # kind = spark_job_op.outputs["kind"]
-    # object_spark_apply = spark_job_op.outputs["object"]
 
     spark_job_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
