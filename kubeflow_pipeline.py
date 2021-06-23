@@ -52,8 +52,6 @@ def graph_component_spark_app_status(input_from_op):
     with dsl.Condition(check_spark_application_status_op.outputs["applicationstate"] == SPARK_RUNNING_STATE):
         graph_component_spark_app_status(check_spark_application_status_op.outputs["name"])
 
-    return check_spark_application_status_op
-
 
 @dsl.pipeline(
     name="Spark Operator job pipeline",
