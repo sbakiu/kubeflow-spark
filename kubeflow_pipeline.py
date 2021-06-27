@@ -32,7 +32,7 @@ def print_op(msg):
     Op to print a message.
     """
     return dsl.ContainerOp(
-        name="Print",
+        name="Print message.",
         image="alpine:3.6",
         command=["echo", msg],
     )
