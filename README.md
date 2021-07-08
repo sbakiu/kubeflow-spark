@@ -25,9 +25,9 @@ sh ./scripts/install-kubeflow.sh
 sh ./scripts/install-spark-operator.sh
 ```
 
-4. Create Spark Service Account
+4. Create Spark Service Account and add permissions
 ```
-sh ./scripts/add-spark-sa.sh
+sh ./scripts/add-spark-rbac.sh
 ```
 
 5. Make Kubeflow UI reachable
