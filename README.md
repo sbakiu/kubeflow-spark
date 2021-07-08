@@ -33,7 +33,7 @@ sh ./scripts/add-spark-rbac.sh
 5. Make Kubeflow UI reachable
 5a. (Optional) Add Kubeflow UI Ingress
 ```
-sh ./scripts/add-kubeflow-ingress.sh
+sh ./scripts/add-kubeflow-ui-ingress.sh
 ```
 5b. (Optional) Forward service port, e.g:
 ```
