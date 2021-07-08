@@ -31,11 +31,12 @@ sh ./scripts/add-spark-rbac.sh
 ```
 
 5. Make Kubeflow UI reachable
-5a. (Optional) Add Kubeflow UI Ingress
+
+* a. (Optional) Add Kubeflow UI Ingress
 ```
 sh ./scripts/add-kubeflow-ui-ingress.sh
-```
-5b. (Optional) Forward service port, e.g:
+``` 
+* b. (Optional) Forward service port, e.g:
 ```
 kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8005:80
 ```
@@ -48,7 +49,7 @@ python kubeflow_pipeline.py
 7. Navigate to the Pipelines UI and upload the newly created pipeline from file `spark_job_pipeline.yaml`
 
 
-8. Trigger a pipeline run. Make sure to set `spark-sa` as Service Account for the exectuion.
+8. Trigger a pipeline run. Make sure to set `spark-sa` as Service Account for the execution.
 
 
 9. Enjoy your orchestrated Spark job execution!
