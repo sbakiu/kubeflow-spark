@@ -38,7 +38,7 @@ def print_op(msg):
     )
 
 
-@dsl.graph_component
+@dsl.graph_component  # Graph component decorator is used to annotate recursive functions
 def graph_component_spark_app_status(input_from_op):
     k8s_get_op = comp.load_component_from_file("spark-get-component.yaml")
     check_spark_application_status_op = k8s_get_op(
