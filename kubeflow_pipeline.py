@@ -69,7 +69,9 @@ def spark_job_pipeline():
     spark_application_status_op = graph_component_spark_app_status(spark_job_op.outputs["name"])
     spark_application_status_op.after(spark_job_op)
 
-    print_op(name).after(spark_application_status_op)
+    print_message = print_op(name)
+    print_message.after(spark_application_status_op)
+    print_message.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
 
 if __name__ == "__main__":
