@@ -49,7 +49,7 @@ def graph_component_spark_app_status(input_from_op):
     check_spark_application_status_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
     time.sleep(5)
-    with dsl.Condition(check_spark_application_status_op.outputs["applicationstate"] == SPARK_RUNNING_STATE):
+    with dsl.Condition(check_spark_application_status_op.outputs["applicationstate"] != SPARK_COMPLETED_STATE):
         graph_component_spark_app_status(check_spark_application_status_op.outputs["name"])
 
 
