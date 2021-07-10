@@ -64,6 +64,7 @@ def spark_job_pipeline():
     spark_job_op = k8s_apply_op(object=json.dumps(spark_job_definition))
     name = spark_job_op.outputs["name"]
 
+    # Remove cache for the apply operator
     spark_job_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
     spark_application_status_op = graph_component_spark_app_status(spark_job_op.outputs["name"])
