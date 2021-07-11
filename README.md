@@ -12,29 +12,29 @@ Orchestrate Spark Jobs using Kubeflow, a modern Machine Learning orchestration f
 ## Getting started
 1. Start your local cluster
 ```
-sh ./scripts/minikube-start.sh
+./scripts/minikube-start.sh
 ```
 
 2. Install Kubeflow Pipelines
 ```
-sh ./scripts/install-kubeflow.sh
+./scripts/install-kubeflow.sh
 ```
 
 3. Install Spark Operator
 ```
-sh ./scripts/install-spark-operator.sh
+./scripts/install-spark-operator.sh
 ```
 
 4. Create Spark Service Account and add permissions
 ```
-sh ./scripts/add-spark-rbac.sh
+./scripts/add-spark-rbac.sh
 ```
 
 5. Make Kubeflow UI reachable
 
 * a. (Optional) Add Kubeflow UI Ingress
 ```
-sh ./scripts/add-kubeflow-ui-ingress.sh
+./scripts/add-kubeflow-ui-ingress.sh
 ``` 
 * b. (Optional) Forward service port, e.g:
 ```
