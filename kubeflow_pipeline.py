@@ -39,10 +39,10 @@ def print_op(msg):
 
 
 @dsl.graph_component  # Graph component decorator is used to annotate recursive functions
-def graph_component_spark_app_status(input_from_op):
-    k8s_get_op = comp.load_component_from_file("spark-get-component.yaml")
+def graph_component_spark_app_status(input_application_name):
+    k8s_get_op = comp.load_component_from_file("k8s-get-component.yaml")
     check_spark_application_status_op = k8s_get_op(
-        name=input_from_op,
+        name=input_application_name,
         kind=SPARK_APPLICATION_KIND
     )
     # Remove cache
@@ -60,7 +60,7 @@ def graph_component_spark_app_status(input_from_op):
 def spark_job_pipeline():
     spark_job_definition = get_spark_job_definition()
 
-    k8s_apply_op = comp.load_component_from_file("spark-apply-component.yaml")
+    k8s_apply_op = comp.load_component_from_file("k8s-apply-component.yaml")
     spark_job_op = k8s_apply_op(object=json.dumps(spark_job_definition))
     name = spark_job_op.outputs["name"]
 
@@ -70,7 +70,7 @@ def spark_job_pipeline():
     spark_application_status_op = graph_component_spark_app_status(spark_job_op.outputs["name"])
     spark_application_status_op.after(spark_job_op)
 
-    print_message = print_op(name)
+    print_message = print_op(f"Job {name} is completed.")
     print_message.after(spark_application_status_op)
     print_message.execution_options.caching_strategy.max_cache_staleness = "P0D"
 

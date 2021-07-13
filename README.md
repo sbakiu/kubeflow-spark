@@ -12,7 +12,7 @@ Orchestrate Spark Jobs using Kubeflow, a modern Machine Learning orchestration f
 ## Getting started
 1. Start your local cluster
 ```
-./scripts/minikube-start.sh
+./scripts/start-minikube.sh
 ```
 
 2. Install Kubeflow Pipelines
