@@ -78,6 +78,9 @@ def spark_job_pipeline():
 if __name__ == "__main__":
     # Compile the pipeline
     import kfp.compiler as compiler
+    import logging
+    logging.basicConfig(level=logging.INFO)
     pipeline_func = spark_job_pipeline
     pipeline_filename = pipeline_func.__name__ + ".yaml"
     compiler.Compiler().compile(pipeline_func, pipeline_filename)
+    logging.info(f"Generated pipeline file: {pipeline_filename}.")
