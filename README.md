@@ -1,5 +1,5 @@
 # Kubeflow Spark
-Orchestrate Spark Jobs using Kubeflow, a modern Machine Learning orchestration framework.
+Orchestrate Spark Jobs using Kubeflow, a modern Machine Learning orchestration framework. Read related [blog post](https://bit.ly/2VNCmgT).
 
 ## Requirements
 1. Kubernetes cluster (1.17+)
