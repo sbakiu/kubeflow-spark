@@ -5,7 +5,6 @@ import yaml
 import kfp.components as comp
 import kfp.dsl as dsl
 
-SPARK_RUNNING_STATE = "RUNNING"
 SPARK_COMPLETED_STATE = "COMPLETED"
 SPARK_APPLICATION_KIND = "sparkapplications"
 
