@@ -3,13 +3,15 @@ Orchestrate Spark Jobs using Kubeflow, a modern Machine Learning orchestration f
 
 ## Requirements
 1. Kubernetes cluster (1.17+)
-2. Kubeflow pipelines (1.6.0+)
+2. Kubeflow pipelines (1.7.0+)
 3. Spark Operator (1.1.0+)
 4. Python (3.6+)
 5. kubectl
 6. helm3
 
 ## Getting started
+Run `make all` to start everything and skip to step 6 or:
+
 1. Start your local cluster
 ```
 ./scripts/start-minikube.sh
