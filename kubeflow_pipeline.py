@@ -57,11 +57,18 @@ def graph_component_spark_app_status(input_application_name):
     description="Spark Operator job pipeline"
 )
 def spark_job_pipeline():
+
+    # Load spark job manifest
     spark_job_definition = get_spark_job_definition()
 
+    # Load the kubernetes apply component
     k8s_apply_op = comp.load_component_from_file("k8s-apply-component.yaml")
+
+    # Execute the apply command
     spark_job_op = k8s_apply_op(object=json.dumps(spark_job_definition))
-    name = spark_job_op.outputs["name"]
+
+    # Fetch spark job name
+    spark_job_name = spark_job_op.outputs["name"]
 
     # Remove cache for the apply operator
     spark_job_op.execution_options.caching_strategy.max_cache_staleness = "P0D"
@@ -69,7 +76,7 @@ def spark_job_pipeline():
     spark_application_status_op = graph_component_spark_app_status(spark_job_op.outputs["name"])
     spark_application_status_op.after(spark_job_op)
 
-    print_message = print_op(f"Job {name} is completed.")
+    print_message = print_op(f"Job {spark_job_name} is completed.")
     print_message.after(spark_application_status_op)
     print_message.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
