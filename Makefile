@@ -21,3 +21,5 @@ pipeline:
 dashboard:
 		minikube dashboard
 
+delete:
+		minikube delete
