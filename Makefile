@@ -15,6 +15,9 @@ rbac:
 port-forward:
 		kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8005:80
 
+pipeline:
+		python kubeflow_pipeline.py
+
 dashboard:
 		minikube dashboard
 

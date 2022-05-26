@@ -16,7 +16,7 @@ def get_spark_job_definition():
     :return: dictionary defining the spark job
     """
     # Read manifest file
-    with open("spark-job.yaml", "r") as stream:
+    with open("spark-job-python.yaml", "r") as stream:
         spark_job_manifest = yaml.safe_load(stream)
 
     # Add epoch time in the job name
